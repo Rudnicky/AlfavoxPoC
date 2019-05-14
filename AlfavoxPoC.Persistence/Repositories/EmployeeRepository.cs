@@ -1,6 +1,5 @@
 ﻿using AlfavoxPoC.Core.Domain;
 using AlfavoxPoC.Core.Interfaces;
-using AlfavoxPoC.Persistence;
 
 namespace AlfavoxPoC.Persistence.Repositories
 {

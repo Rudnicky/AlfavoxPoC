@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AlfavoxPoC.Core.ViewModels
+﻿namespace AlfavoxPoC.Core.ViewModels
 {
     class AddProductToCompanyViewModel
     {
+        // TODO: same logic as for different Add View Models
     }
 }

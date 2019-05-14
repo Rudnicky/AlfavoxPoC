@@ -1,0 +1,19 @@
+﻿@model AlfavoxPoC.Core.ViewModels.AddLocationToCompanyViewModel
+
+@{
+}
+
+<h2>Add Location to @Model.Company.Name</h2>
+
+<form asp-controller="Companies" asp-action="AddLocation" method="post">
+    <div class="form-group">
+        <label asp-for="LocationId"></label>
+        <select asp-for="LocationId" asp-items="Model.Locations"></select>
+        <span asp-validation-for="LocationId"></span>
+    </div>
+
+    <input type="hidden" name="CompanyId" value="@Model.Company.CompanyId" />
+
+    <input type="submit" value="Add Item" />
+</form>
+

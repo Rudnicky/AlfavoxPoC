@@ -11,6 +11,7 @@ namespace AlfavoxPoC.Controllers
     {
         private readonly ICompanyRepository _companyRepository;
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly ILocationRepository _locationRepository;
         private readonly ICompanyEmployeeRepository _companyEmployeeRepository;
         private readonly ICompanyLocationRepository _companyLocationRepository;
         private readonly ICompanyProductRepository _companyProductRepository;
@@ -18,12 +19,14 @@ namespace AlfavoxPoC.Controllers
         public CompaniesController(
             ICompanyRepository companyRepository,
             IEmployeeRepository employeeRepository,
+            ILocationRepository locationRepository,
             ICompanyEmployeeRepository companyEmployeeRepository,
             ICompanyLocationRepository companyLocationRepository,
             ICompanyProductRepository companyProductRepository)
         {
             _companyRepository = companyRepository;
             _employeeRepository = employeeRepository;
+            _locationRepository = locationRepository;
             _companyEmployeeRepository = companyEmployeeRepository;
             _companyLocationRepository = companyLocationRepository;
             _companyProductRepository = companyProductRepository;
@@ -47,11 +50,16 @@ namespace AlfavoxPoC.Controllers
                     .Where(cm => cm.CompanyId == id)
                     .ToList();
 
+                var locations = _companyLocationRepository.GetQueryable()
+                    .Include(item => item.Location)
+                    .Where(cm => cm.CompanyId == id)
+                    .ToList();
 
                 var viewCompanyViewModel = new ViewCompanyViewModel
                 {
                     Company = company,
-                    CompanyEmployees = employees
+                    CompanyEmployees = employees,
+                    CompanyLocations = locations
                 };
 
                 return View(viewCompanyViewModel);
@@ -213,6 +221,57 @@ namespace AlfavoxPoC.Controllers
             else
             {
                 return View(addEmployeeToCompanyViewModel);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult AddLocation(int id)
+        {
+            var company = _companyRepository.Get(id);
+            if (company != null)
+            {
+                var locations = _locationRepository.GetAll().ToList();
+                if (locations != null && locations.Count > 0)
+                {
+                    var addLocationToCompanyViewModel = new AddLocationToCompanyViewModel(company, locations);
+                    return View(addLocationToCompanyViewModel);
+                }
+            }
+
+            return NotFound();
+        }
+
+        [HttpPost]
+        public IActionResult AddLocation(AddLocationToCompanyViewModel addLocationToCompanyViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var locationId = addLocationToCompanyViewModel.LocationId;
+                var companyId = addLocationToCompanyViewModel.CompanyId;
+
+                var existingItems = _companyLocationRepository.GetQueryable()
+                    .Where(cm => cm.LocationId == locationId)
+                    .Where(cm => cm.CompanyId == companyId)
+                    .ToList();
+
+                if (existingItems.Count == 0)
+                {
+                    var companyLocation = new CompanyLocation
+                    {
+                        LocationId = locationId,
+                        CompanyId = companyId
+                    };
+                    _companyLocationRepository.Add(companyLocation);
+                    return Redirect("/Companies/Details?id=" + companyId);
+                }
+                else
+                {
+                    return Redirect("/Characters/Details?id=" + companyId);
+                }
+            }
+            else
+            {
+                return View(addLocationToCompanyViewModel);
             }
         }
 

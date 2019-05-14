@@ -24,3 +24,22 @@
 <p>
     <a asp-controller="Companies" asp-action="AddEmployee" asp-route-id="@Model.Company.CompanyId">Add Employee</a>
 </p>
+
+<h3>Locations:</h3>
+<ul>
+    @foreach (var location in Model.CompanyLocations)
+    {
+        <li>@location.Location.City</li>
+
+    }
+</ul>
+
+@if (Model.CompanyLocations.Count == 0)
+{
+    <p><i>There's none locations added yet</i></p>
+
+}
+
+<p>
+    <a asp-controller="Companies" asp-action="AddLocation" asp-route-id="@Model.Company.CompanyId">Add Location</a>
+</p>

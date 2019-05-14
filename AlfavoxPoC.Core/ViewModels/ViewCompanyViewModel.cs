@@ -7,5 +7,6 @@ namespace AlfavoxPoC.Core.ViewModels
     {
         public Company Company { get; set; }
         public IList<CompanyEmployee> CompanyEmployees { get; set; }
+        public IList<CompanyLocation> CompanyLocations { get; set; }
     }
 }

@@ -39,6 +39,7 @@ namespace AlfavoxPoC
             services.AddScoped<ICompanyRepository, CompanyRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            services.AddScoped<ILocationRepository, LocationRepository>();
 
             services.AddScoped<ICompanyEmployeeRepository, CompanyEmployeeRepository>();
             services.AddScoped<ICompanyLocationRepository, CompanyLocationRepository>();
