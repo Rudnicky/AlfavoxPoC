@@ -1,40 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AlfavoxPoC.Core.Domain;
+using AlfavoxPoC.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Alfavox.Persistence;
-using AlfavoxPoC.Core.Domain;
+using System.Linq;
 
 namespace AlfavoxPoC.Controllers
 {
     public class ProductsController : Controller
     {
-        private readonly AlfavoxDbContext _context;
+        private readonly IProductRepository productRepository;
 
-        public ProductsController(AlfavoxDbContext context)
+        public ProductsController(IProductRepository context)
         {
-            _context = context;
+            productRepository = context;
         }
 
         // GET: Products
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Products.ToListAsync());
+            return View(productRepository.GetAll());
         }
 
         // GET: Products/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var product = await _context.Products
-                .FirstOrDefaultAsync(m => m.ProductId == id);
+            var productId = (int)id;
+            var product = productRepository.Get(productId);
             if (product == null)
             {
                 return NotFound();
@@ -54,26 +50,26 @@ namespace AlfavoxPoC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,Title,Type,BriefContent")] Product product)
+        public IActionResult Create([Bind("ProductId,Title,Type,BriefContent")] Product product)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(product);
-                await _context.SaveChangesAsync();
+                productRepository.Add(product);
                 return RedirectToAction(nameof(Index));
             }
             return View(product);
         }
 
         // GET: Products/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var product = await _context.Products.FindAsync(id);
+            var productId = (int)id;
+            var product = productRepository.Get(productId);
             if (product == null)
             {
                 return NotFound();
@@ -86,7 +82,7 @@ namespace AlfavoxPoC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,Title,Type,BriefContent")] Product product)
+        public IActionResult Edit(int id, [Bind("ProductId,Title,Type,BriefContent")] Product product)
         {
             if (id != product.ProductId)
             {
@@ -97,8 +93,7 @@ namespace AlfavoxPoC.Controllers
             {
                 try
                 {
-                    _context.Update(product);
-                    await _context.SaveChangesAsync();
+                    productRepository.Update(product);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -117,15 +112,16 @@ namespace AlfavoxPoC.Controllers
         }
 
         // GET: Products/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var product = await _context.Products
-                .FirstOrDefaultAsync(m => m.ProductId == id);
+            var productId = (int)id;
+            var product = productRepository.Get(productId);
+
             if (product == null)
             {
                 return NotFound();
@@ -137,17 +133,20 @@ namespace AlfavoxPoC.Controllers
         // POST: Products/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            var product = await _context.Products.FindAsync(id);
-            _context.Products.Remove(product);
-            await _context.SaveChangesAsync();
+            var product = productRepository.Get(id);
+            if (product != null)
+            {
+                productRepository.Delete(product);
+            }
+
             return RedirectToAction(nameof(Index));
         }
 
         private bool ProductExists(int id)
         {
-            return _context.Products.Any(e => e.ProductId == id);
+            return productRepository.GetAll().Any(e => e.ProductId == id);
         }
     }
 }

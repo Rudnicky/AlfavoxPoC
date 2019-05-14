@@ -1,40 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AlfavoxPoC.Core.Domain;
+using AlfavoxPoC.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Alfavox.Persistence;
-using AlfavoxPoC.Core.Domain;
+using System.Linq;
 
 namespace AlfavoxPoC.Controllers
 {
     public class EmployeesController : Controller
     {
-        private readonly AlfavoxDbContext _context;
+        private readonly IEmployeeRepository _employeeRepository;
 
-        public EmployeesController(AlfavoxDbContext context)
+        public EmployeesController(IEmployeeRepository employeeRepository)
         {
-            _context = context;
+            _employeeRepository = employeeRepository;
         }
 
         // GET: Employees
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Employees.ToListAsync());
+            return View(_employeeRepository.GetAll());
         }
 
         // GET: Employees/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var employee = await _context.Employees
-                .FirstOrDefaultAsync(m => m.EmployeeId == id);
+            int employeeId = (int)id;
+            var employee = _employeeRepository.Get(employeeId);
             if (employee == null)
             {
                 return NotFound();
@@ -54,26 +50,26 @@ namespace AlfavoxPoC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("EmployeeId,FirstName,LastName,Position")] Employee employee)
+        public IActionResult Create([Bind("EmployeeId,FirstName,LastName,Position")] Employee employee)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(employee);
-                await _context.SaveChangesAsync();
+                _employeeRepository.Add(employee);
                 return RedirectToAction(nameof(Index));
             }
             return View(employee);
         }
 
         // GET: Employees/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var employee = await _context.Employees.FindAsync(id);
+            int employeeId = (int)id;
+            var employee = _employeeRepository.Get(employeeId);
             if (employee == null)
             {
                 return NotFound();
@@ -86,7 +82,7 @@ namespace AlfavoxPoC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("EmployeeId,FirstName,LastName,Position")] Employee employee)
+        public IActionResult Edit(int id, [Bind("EmployeeId,FirstName,LastName,Position")] Employee employee)
         {
             if (id != employee.EmployeeId)
             {
@@ -97,8 +93,7 @@ namespace AlfavoxPoC.Controllers
             {
                 try
                 {
-                    _context.Update(employee);
-                    await _context.SaveChangesAsync();
+                    _employeeRepository.Update(employee);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -117,15 +112,15 @@ namespace AlfavoxPoC.Controllers
         }
 
         // GET: Employees/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var employee = await _context.Employees
-                .FirstOrDefaultAsync(m => m.EmployeeId == id);
+            int employeeId = (int)id;
+            var employee = _employeeRepository.Get(employeeId);
             if (employee == null)
             {
                 return NotFound();
@@ -137,17 +132,20 @@ namespace AlfavoxPoC.Controllers
         // POST: Employees/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            var employee = await _context.Employees.FindAsync(id);
-            _context.Employees.Remove(employee);
-            await _context.SaveChangesAsync();
+            var employee = _employeeRepository.Get(id);
+            if (employee != null)
+            {
+                _employeeRepository.Delete(employee);
+            }
+
             return RedirectToAction(nameof(Index));
         }
 
         private bool EmployeeExists(int id)
         {
-            return _context.Employees.Any(e => e.EmployeeId == id);
+            return _employeeRepository.GetAll().Any(e => e.EmployeeId == id);
         }
     }
 }

@@ -1,37 +1,36 @@
-﻿using Alfavox.Persistence;
-using AlfavoxPoC.Core.Domain;
+﻿using AlfavoxPoC.Core.Domain;
+using AlfavoxPoC.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace AlfavoxPoC.Controllers
 {
     public class CompaniesController : Controller
     {
-        private readonly AlfavoxDbContext _context;
+        private readonly ICompanyRepository _companyRepository;
 
-        public CompaniesController(AlfavoxDbContext context)
+        public CompaniesController(ICompanyRepository companyRepository)
         {
-            _context = context;
+            _companyRepository = companyRepository;
         }
 
         // GET: Companies
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Compenies.ToListAsync());
+            return View(_companyRepository.GetAll());
         }
 
         // GET: Companies/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var company = await _context.Compenies
-                .FirstOrDefaultAsync(m => m.CompanyId == id);
+            int companyId = (int)id;
+            var company = _companyRepository.Get(companyId);
             if (company == null)
             {
                 return NotFound();
@@ -51,26 +50,26 @@ namespace AlfavoxPoC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CompanyId,Name")] Company company)
+        public IActionResult Create([Bind("CompanyId,Name")] Company company)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(company);
-                await _context.SaveChangesAsync();
+                _companyRepository.Add(company);
                 return RedirectToAction(nameof(Index));
             }
             return View(company);
         }
 
         // GET: Companies/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var company = await _context.Compenies.FindAsync(id);
+            int companyId = (int)id;
+            var company = _companyRepository.Get(companyId);
             if (company == null)
             {
                 return NotFound();
@@ -83,7 +82,7 @@ namespace AlfavoxPoC.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CompanyId,Name")] Company company)
+        public IActionResult Edit(int id, [Bind("CompanyId,Name")] Company company)
         {
             if (id != company.CompanyId)
             {
@@ -94,8 +93,7 @@ namespace AlfavoxPoC.Controllers
             {
                 try
                 {
-                    _context.Update(company);
-                    await _context.SaveChangesAsync();
+                    _companyRepository.Update(company);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -114,15 +112,16 @@ namespace AlfavoxPoC.Controllers
         }
 
         // GET: Companies/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var company = await _context.Compenies
-                .FirstOrDefaultAsync(m => m.CompanyId == id);
+            int companyId = (int)id;
+            var company = _companyRepository.Get(companyId);
+
             if (company == null)
             {
                 return NotFound();
@@ -134,17 +133,20 @@ namespace AlfavoxPoC.Controllers
         // POST: Companies/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int id)
         {
-            var company = await _context.Compenies.FindAsync(id);
-            _context.Compenies.Remove(company);
-            await _context.SaveChangesAsync();
+            var company = _companyRepository.Get(id);
+            if (company != null)
+            {
+                _companyRepository.Delete(company);
+            }
+
             return RedirectToAction(nameof(Index));
         }
 
         private bool CompanyExists(int id)
         {
-            return _context.Compenies.Any(e => e.CompanyId == id);
+            return _companyRepository.GetAll().Any(e => e.CompanyId == id);
         }
     }
 }
