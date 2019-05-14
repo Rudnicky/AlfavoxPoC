@@ -2,7 +2,7 @@
 using AlfavoxPoC.Core.Enums;
 using System.Linq;
 
-namespace Alfavox.Persistence
+namespace AlfavoxPoC.Persistence
 {
     public class DbInitializer
     {

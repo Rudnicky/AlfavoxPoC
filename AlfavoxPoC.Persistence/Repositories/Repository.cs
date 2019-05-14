@@ -3,7 +3,7 @@ using AlfavoxPoC.Core.Repositories;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Alfavox.Persistence.Repositories
+namespace AlfavoxPoC.Persistence.Repositories
 {
     public class Repository<T> : IRepository<T> where T : EntityBase
     {

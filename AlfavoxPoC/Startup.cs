@@ -1,6 +1,6 @@
-﻿using Alfavox.Persistence;
-using Alfavox.Persistence.Repositories;
-using AlfavoxPoC.Core.Interfaces;
+﻿using AlfavoxPoC.Core.Interfaces;
+using AlfavoxPoC.Persistence;
+using AlfavoxPoC.Persistence.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;

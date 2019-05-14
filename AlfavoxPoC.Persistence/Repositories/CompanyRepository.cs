@@ -1,7 +1,7 @@
 ﻿using AlfavoxPoC.Core.Domain;
 using AlfavoxPoC.Core.Interfaces;
 
-namespace Alfavox.Persistence.Repositories
+namespace AlfavoxPoC.Persistence.Repositories
 {
     public sealed class CompanyRepository : Repository<Company>, ICompanyRepository
     {

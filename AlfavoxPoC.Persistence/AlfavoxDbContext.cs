@@ -1,7 +1,7 @@
 ﻿using AlfavoxPoC.Core.Domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace Alfavox.Persistence
+namespace AlfavoxPoC.Persistence
 {
     public class AlfavoxDbContext : DbContext
     {
