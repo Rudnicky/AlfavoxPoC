@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Alfavox.Persistence\Alfavox.Persistence.csproj" />
+    <ProjectReference Include="..\Alfavox.Persistence\AlfavoxPoC.Persistence.csproj" />
     <ProjectReference Include="..\AlfavoxPoC.Core\AlfavoxPoC.Core.csproj" />
   </ItemGroup>
 
