@@ -14,26 +14,20 @@ namespace AlfavoxPoC.Persistence
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<CompanyEmployee> CompanyEmployee { get; set; }
+        public DbSet<CompanyLocation> CompanyLocation { get; set; }
+        public DbSet<CompanyProduct> CompanyProduct { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Company>()
-                .HasMany(x => x.Employees);
+            modelBuilder.Entity<CompanyEmployee>()
+                .HasKey(k => new { k.CompanyId, k.EmployeeId });
 
-            modelBuilder.Entity<Company>()
-                .HasMany(x => x.Locations);
+            modelBuilder.Entity<CompanyLocation>()
+                .HasKey(k => new { k.CompanyId, k.LocationId });
 
-            modelBuilder.Entity<Company>()
-                .HasMany(x => x.Products);
-
-            modelBuilder.Entity<Employee>()
-                .HasOne(x => x.Company);
-
-            modelBuilder.Entity<Location>()
-                .HasOne(x => x.Company);
-
-            modelBuilder.Entity<Product>()
-                .HasOne(x => x.Company);
+            modelBuilder.Entity<CompanyProduct>()
+                .HasKey(k => new { k.CompanyId, k.ProductId });
 
             // auto-increment PostgreSql value generation
             modelBuilder.ForNpgsqlUseIdentityColumns();

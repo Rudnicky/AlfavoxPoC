@@ -1,24 +1,26 @@
-﻿@model AlfavoxPoC.Core.Domain.Company
+﻿@model AlfavoxPoC.Core.ViewModels.ViewCompanyViewModel
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h2>Details</h2>
+<h2>@Model.Company.Name</h2>
 
-<div>
-    <h4>Company</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.CompanyId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+<h3>Employees:</h3>
+<ul>
+    @foreach (var episode in Model.CompanyEmployees)
+    {
+        <li>@episode.Employee.LastName</li>
+
+    }
+</ul>
+
+@if (Model.CompanyEmployees.Count == 0)
+{
+    <p><i>There's none employees added yet</i></p>
+
+}
+
+<p>
+    <a asp-controller="Companies" asp-action="AddEmployee" asp-route-id="@Model.Company.CompanyId">Add Employee</a>
+</p>

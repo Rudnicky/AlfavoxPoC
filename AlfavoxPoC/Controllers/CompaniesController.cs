@@ -1,5 +1,6 @@
 ﻿using AlfavoxPoC.Core.Domain;
 using AlfavoxPoC.Core.Interfaces;
+using AlfavoxPoC.Core.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -9,10 +10,23 @@ namespace AlfavoxPoC.Controllers
     public class CompaniesController : Controller
     {
         private readonly ICompanyRepository _companyRepository;
+        private readonly IEmployeeRepository _employeeRepository;
+        private readonly ICompanyEmployeeRepository _companyEmployeeRepository;
+        private readonly ICompanyLocationRepository _companyLocationRepository;
+        private readonly ICompanyProductRepository _companyProductRepository;
 
-        public CompaniesController(ICompanyRepository companyRepository)
+        public CompaniesController(
+            ICompanyRepository companyRepository,
+            IEmployeeRepository employeeRepository,
+            ICompanyEmployeeRepository companyEmployeeRepository,
+            ICompanyLocationRepository companyLocationRepository,
+            ICompanyProductRepository companyProductRepository)
         {
             _companyRepository = companyRepository;
+            _employeeRepository = employeeRepository;
+            _companyEmployeeRepository = companyEmployeeRepository;
+            _companyLocationRepository = companyLocationRepository;
+            _companyProductRepository = companyProductRepository;
         }
 
         // GET: Companies
@@ -24,19 +38,26 @@ namespace AlfavoxPoC.Controllers
         // GET: Companies/Details/5
         public IActionResult Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            int companyId = (int)id;
+            var companyId = (int)id;
             var company = _companyRepository.Get(companyId);
-            if (company == null)
+            if (company != null)
             {
-                return NotFound();
+                var employees = _companyEmployeeRepository.GetQueryable()
+                    .Include(item => item.Employee)
+                    .Where(cm => cm.CompanyId == id)
+                    .ToList();
+
+
+                var viewCompanyViewModel = new ViewCompanyViewModel
+                {
+                    Company = company,
+                    CompanyEmployees = employees
+                };
+
+                return View(viewCompanyViewModel);
             }
 
-            return View(company);
+            return NotFound();
         }
 
         // GET: Companies/Create
@@ -142,6 +163,57 @@ namespace AlfavoxPoC.Controllers
             }
 
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public IActionResult AddEmployee(int id)
+        {
+            var company = _companyRepository.Get(id);
+            if (company != null)
+            {
+                var employees = _employeeRepository.GetAll().ToList();
+                if (employees != null && employees.Count > 0)
+                {
+                    var addEmployeeToCompanyViewModel = new AddEmployeeToCompanyViewModel(company, employees);
+                    return View(addEmployeeToCompanyViewModel);
+                }
+            }
+
+            return NotFound();
+        }
+
+        [HttpPost]
+        public IActionResult AddEmployee(AddEmployeeToCompanyViewModel addEmployeeToCompanyViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var employeeId = addEmployeeToCompanyViewModel.EmployeeId;
+                var companyId = addEmployeeToCompanyViewModel.CompanyId;
+
+                var existingItems = _companyEmployeeRepository.GetQueryable()
+                    .Where(cm => cm.EmployeeId == employeeId)
+                    .Where(cm => cm.CompanyId == companyId)
+                    .ToList();
+
+                if (existingItems.Count == 0)
+                {
+                    var newCompanyEmployee = new CompanyEmployee
+                    {
+                        EmployeeId = employeeId,
+                        CompanyId = companyId
+                    };
+                    _companyEmployeeRepository.Add(newCompanyEmployee);
+                    return Redirect("/Companies/Details?id=" + companyId);
+                }
+                else
+                {
+                    return Redirect("/Characters/Details?id=" + companyId);
+                }
+            }
+            else
+            {
+                return View(addEmployeeToCompanyViewModel);
+            }
         }
 
         private bool CompanyExists(int id)

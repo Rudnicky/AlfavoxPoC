@@ -8,8 +8,8 @@ namespace AlfavoxPoC.Core.Domain
         [Key]
         public int CompanyId { get; set; }
         public string Name { get; set; }
-        public IEnumerable<Product> Products { get; set; }
-        public IEnumerable<Location> Locations { get; set; }
-        public IEnumerable<Employee> Employees { get; set; }
+        public IEnumerable<CompanyEmployee> Employees { get; set; }
+        public IEnumerable<CompanyLocation> Locations { get; set; }
+        public IEnumerable<CompanyProduct> Products { get; set; }
     }
 }

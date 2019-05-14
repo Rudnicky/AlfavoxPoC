@@ -39,6 +39,10 @@ namespace AlfavoxPoC
             services.AddScoped<ICompanyRepository, CompanyRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+
+            services.AddScoped<ICompanyEmployeeRepository, CompanyEmployeeRepository>();
+            services.AddScoped<ICompanyLocationRepository, CompanyLocationRepository>();
+            services.AddScoped<ICompanyProductRepository, CompanyProductRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

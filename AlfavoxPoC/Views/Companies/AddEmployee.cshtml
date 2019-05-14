@@ -1,0 +1,19 @@
+﻿@model AlfavoxPoC.Core.ViewModels.AddEmployeeToCompanyViewModel
+
+@{
+}
+
+<h2>Add Employee to @Model.Company.Name</h2>
+
+<form asp-controller="Companies" asp-action="AddEmployee" method="post">
+    <div class="form-group">
+        <label asp-for="EmployeeId"></label>
+        <select asp-for="EmployeeId" asp-items="Model.Employees"></select>
+        <span asp-validation-for="EmployeeId"></span>
+    </div>
+
+    <input type="hidden" name="CompanyId" value="@Model.Company.CompanyId" />
+
+    <input type="submit" value="Add Item" />
+</form>
+

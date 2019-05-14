@@ -60,10 +60,7 @@ namespace AlfavoxPoC.Persistence
 
             var company = new Company()
             {
-                Name = "Alfavox",
-                Locations = locations,
-                Products = products,
-                Employees = employees
+                Name = "Alfavox"
             };
 
             context.Compenies.Add(company);
