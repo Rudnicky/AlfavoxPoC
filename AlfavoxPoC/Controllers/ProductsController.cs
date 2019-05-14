@@ -1,28 +1,31 @@
-﻿using Alfavox.Persistence;
-using AlfavoxPoC.Core.Domain;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Alfavox.Persistence;
+using AlfavoxPoC.Core.Domain;
 
 namespace AlfavoxPoC.Controllers
 {
-    public class CompaniesController : Controller
+    public class ProductsController : Controller
     {
         private readonly AlfavoxDbContext _context;
 
-        public CompaniesController(AlfavoxDbContext context)
+        public ProductsController(AlfavoxDbContext context)
         {
             _context = context;
         }
 
-        // GET: Companies
+        // GET: Products
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Compenies.ToListAsync());
+            return View(await _context.Products.ToListAsync());
         }
 
-        // GET: Companies/Details/5
+        // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -30,39 +33,39 @@ namespace AlfavoxPoC.Controllers
                 return NotFound();
             }
 
-            var company = await _context.Compenies
-                .FirstOrDefaultAsync(m => m.CompanyId == id);
-            if (company == null)
+            var product = await _context.Products
+                .FirstOrDefaultAsync(m => m.ProductId == id);
+            if (product == null)
             {
                 return NotFound();
             }
 
-            return View(company);
+            return View(product);
         }
 
-        // GET: Companies/Create
+        // GET: Products/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Companies/Create
+        // POST: Products/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CompanyId,Name")] Company company)
+        public async Task<IActionResult> Create([Bind("ProductId,Title,Type,BriefContent")] Product product)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(company);
+                _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(company);
+            return View(product);
         }
 
-        // GET: Companies/Edit/5
+        // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -70,22 +73,22 @@ namespace AlfavoxPoC.Controllers
                 return NotFound();
             }
 
-            var company = await _context.Compenies.FindAsync(id);
-            if (company == null)
+            var product = await _context.Products.FindAsync(id);
+            if (product == null)
             {
                 return NotFound();
             }
-            return View(company);
+            return View(product);
         }
 
-        // POST: Companies/Edit/5
+        // POST: Products/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CompanyId,Name")] Company company)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductId,Title,Type,BriefContent")] Product product)
         {
-            if (id != company.CompanyId)
+            if (id != product.ProductId)
             {
                 return NotFound();
             }
@@ -94,12 +97,12 @@ namespace AlfavoxPoC.Controllers
             {
                 try
                 {
-                    _context.Update(company);
+                    _context.Update(product);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CompanyExists(company.CompanyId))
+                    if (!ProductExists(product.ProductId))
                     {
                         return NotFound();
                     }
@@ -110,10 +113,10 @@ namespace AlfavoxPoC.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(company);
+            return View(product);
         }
 
-        // GET: Companies/Delete/5
+        // GET: Products/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -121,30 +124,30 @@ namespace AlfavoxPoC.Controllers
                 return NotFound();
             }
 
-            var company = await _context.Compenies
-                .FirstOrDefaultAsync(m => m.CompanyId == id);
-            if (company == null)
+            var product = await _context.Products
+                .FirstOrDefaultAsync(m => m.ProductId == id);
+            if (product == null)
             {
                 return NotFound();
             }
 
-            return View(company);
+            return View(product);
         }
 
-        // POST: Companies/Delete/5
+        // POST: Products/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var company = await _context.Compenies.FindAsync(id);
-            _context.Compenies.Remove(company);
+            var product = await _context.Products.FindAsync(id);
+            _context.Products.Remove(product);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CompanyExists(int id)
+        private bool ProductExists(int id)
         {
-            return _context.Compenies.Any(e => e.CompanyId == id);
+            return _context.Products.Any(e => e.ProductId == id);
         }
     }
 }

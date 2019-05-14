@@ -12,12 +12,6 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.CompanyId)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.CompanyId)
-        </dd>
-        <dt>
             @Html.DisplayNameFor(model => model.Name)
         </dt>
         <dd>
@@ -26,7 +20,7 @@
     </dl>
     
     <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="CompanyId" />
         <input type="submit" value="Delete" class="btn btn-default" /> |
         <a asp-action="Index">Back to List</a>
     </form>

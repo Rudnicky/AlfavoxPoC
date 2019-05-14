@@ -1,28 +1,31 @@
-﻿using Alfavox.Persistence;
-using AlfavoxPoC.Core.Domain;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Alfavox.Persistence;
+using AlfavoxPoC.Core.Domain;
 
 namespace AlfavoxPoC.Controllers
 {
-    public class CompaniesController : Controller
+    public class EmployeesController : Controller
     {
         private readonly AlfavoxDbContext _context;
 
-        public CompaniesController(AlfavoxDbContext context)
+        public EmployeesController(AlfavoxDbContext context)
         {
             _context = context;
         }
 
-        // GET: Companies
+        // GET: Employees
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Compenies.ToListAsync());
+            return View(await _context.Employees.ToListAsync());
         }
 
-        // GET: Companies/Details/5
+        // GET: Employees/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -30,39 +33,39 @@ namespace AlfavoxPoC.Controllers
                 return NotFound();
             }
 
-            var company = await _context.Compenies
-                .FirstOrDefaultAsync(m => m.CompanyId == id);
-            if (company == null)
+            var employee = await _context.Employees
+                .FirstOrDefaultAsync(m => m.EmployeeId == id);
+            if (employee == null)
             {
                 return NotFound();
             }
 
-            return View(company);
+            return View(employee);
         }
 
-        // GET: Companies/Create
+        // GET: Employees/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Companies/Create
+        // POST: Employees/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CompanyId,Name")] Company company)
+        public async Task<IActionResult> Create([Bind("EmployeeId,FirstName,LastName,Position")] Employee employee)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(company);
+                _context.Add(employee);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(company);
+            return View(employee);
         }
 
-        // GET: Companies/Edit/5
+        // GET: Employees/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -70,22 +73,22 @@ namespace AlfavoxPoC.Controllers
                 return NotFound();
             }
 
-            var company = await _context.Compenies.FindAsync(id);
-            if (company == null)
+            var employee = await _context.Employees.FindAsync(id);
+            if (employee == null)
             {
                 return NotFound();
             }
-            return View(company);
+            return View(employee);
         }
 
-        // POST: Companies/Edit/5
+        // POST: Employees/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CompanyId,Name")] Company company)
+        public async Task<IActionResult> Edit(int id, [Bind("EmployeeId,FirstName,LastName,Position")] Employee employee)
         {
-            if (id != company.CompanyId)
+            if (id != employee.EmployeeId)
             {
                 return NotFound();
             }
@@ -94,12 +97,12 @@ namespace AlfavoxPoC.Controllers
             {
                 try
                 {
-                    _context.Update(company);
+                    _context.Update(employee);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CompanyExists(company.CompanyId))
+                    if (!EmployeeExists(employee.EmployeeId))
                     {
                         return NotFound();
                     }
@@ -110,10 +113,10 @@ namespace AlfavoxPoC.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(company);
+            return View(employee);
         }
 
-        // GET: Companies/Delete/5
+        // GET: Employees/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -121,30 +124,30 @@ namespace AlfavoxPoC.Controllers
                 return NotFound();
             }
 
-            var company = await _context.Compenies
-                .FirstOrDefaultAsync(m => m.CompanyId == id);
-            if (company == null)
+            var employee = await _context.Employees
+                .FirstOrDefaultAsync(m => m.EmployeeId == id);
+            if (employee == null)
             {
                 return NotFound();
             }
 
-            return View(company);
+            return View(employee);
         }
 
-        // POST: Companies/Delete/5
+        // POST: Employees/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var company = await _context.Compenies.FindAsync(id);
-            _context.Compenies.Remove(company);
+            var employee = await _context.Employees.FindAsync(id);
+            _context.Employees.Remove(employee);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CompanyExists(int id)
+        private bool EmployeeExists(int id)
         {
-            return _context.Compenies.Any(e => e.CompanyId == id);
+            return _context.Employees.Any(e => e.EmployeeId == id);
         }
     }
 }

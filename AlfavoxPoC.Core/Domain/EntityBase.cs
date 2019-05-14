@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
-
-namespace AlfavoxPoC.Core.Domain
+﻿namespace AlfavoxPoC.Core.Domain
 {
-    public abstract class EntityBase : IdentityRole
+    public abstract class EntityBase
     {
-        public int Id { get; set; }
     }
 }

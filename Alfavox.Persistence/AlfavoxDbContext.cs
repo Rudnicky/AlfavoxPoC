@@ -34,6 +34,9 @@ namespace Alfavox.Persistence
 
             modelBuilder.Entity<Product>()
                 .HasOne(x => x.Company);
+
+            // auto-increment PostgreSql value generation
+            modelBuilder.ForNpgsqlUseIdentityColumns();
         }
     }
 }
