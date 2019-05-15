@@ -24,6 +24,8 @@
     <PackageReference Include="Microsoft.Extensions.Primitives" Version="2.2.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.9" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="2.2.0" />
+    <PackageReference Include="SwaggerUi" Version="1.1.0" />
+    <PackageReference Include="SwashBuckle.AspNetCore.MicrosoftExtensions" Version="0.5.0" />
   </ItemGroup>
 
   <ItemGroup>

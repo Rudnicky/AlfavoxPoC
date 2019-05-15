@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace AlfavoxPoC
 {
@@ -36,6 +37,9 @@ namespace AlfavoxPoC
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            // swagger generator
+            services.AddSwaggerGen(s => s.SwaggerDoc("v1", new Info() { Title = "Companies Api", Version = "v1" }));
+
             services.AddScoped<ICompanyRepository, CompanyRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
@@ -62,7 +66,8 @@ namespace AlfavoxPoC
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-
+            app.UseSwagger();
+            app.UseSwaggerUi(s => s.SwaggerEndpoint("/swagger/v1/swagger.json", "Api for Companies"));
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
