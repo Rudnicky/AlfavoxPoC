@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlfavoxPoC.Core", "AlfavoxP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlfavoxPoC.Persistence", "AlfavoxPoC.Persistence\AlfavoxPoC.Persistence.csproj", "{B3C57F89-A8C2-46DF-8406-4B04671F8B18}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlfavoxPoC.Tests", "AlfavoxPoC.Tests\AlfavoxPoC.Tests.csproj", "{872172FB-D114-4AE8-8E40-FDC0933B03F1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{B3C57F89-A8C2-46DF-8406-4B04671F8B18}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3C57F89-A8C2-46DF-8406-4B04671F8B18}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B3C57F89-A8C2-46DF-8406-4B04671F8B18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{872172FB-D114-4AE8-8E40-FDC0933B03F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{872172FB-D114-4AE8-8E40-FDC0933B03F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{872172FB-D114-4AE8-8E40-FDC0933B03F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{872172FB-D114-4AE8-8E40-FDC0933B03F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
